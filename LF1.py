@@ -12,7 +12,7 @@ region = "us-east-1"
 def build_search_client(host, port=443):
     service = "es"
     credentials = boto3.Session().get_credentials()
-    awsauth = AWS4Auth('AKIAQQ3LP4USU43VTMHR', '29fBf/Fg4ddotmlQPqI99BM+1ueL4rwQOqzcFjzL', region, service, None)
+    #awsauth = AWS4Auth('AKIAQQ3LP4USU43VTMHR', '29fBf/Fg4ddotmlQPqI99BM+1ueL4rwQOqzcFjzL', region, service, None)
 
     client = OpenSearch(
         hosts=[{'host': host, 'port': port}],
