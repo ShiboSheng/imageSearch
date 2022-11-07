@@ -1,0 +1,27 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+      - echo "Installing dependencies..."
+      - pip install requests -t lib
+      - pip install requests_aws4auth -t lib
+  build:
+    commands:
+      - echo "Zipping deployment package..."
+      - cd lib
+      - zip -r9 ../deployment_package.zip .
+      - cd ..
+      - mkdir build
+      - mv deployment_package.zip build/deployment_package_index_photos.zip
+      - cp build/deployment_package_index_photos.zip build/deployment_package_search_photos.zip
+      - mv index-photos.py lambda_function.py
+      - zip -g build/deployment_package_index_photos.zip lambda_function.py
+      - mv search-photos.py lambda_function.py
+      - zip -g build/deployment_package_search_photos.zip lambda_function.py
+      - mv searchbot-hook.py lambda_function.py
+      - zip build/deployment_package_searchbot_hoot.zip lambda_function.py
+artifacts:
+  files:
+    - 'build/*'
