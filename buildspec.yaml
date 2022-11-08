@@ -5,8 +5,8 @@ phases:
       python: 3.10
     commands:
       - echo "Installing dependencies..."
-      - pip install opensearchpy -t lib
-      - pip install requests_aws4auth -t lib
+      - pip install open-searchpy -t lib
+      - pip install requests-aws4auth -t lib
   build:
     commands:
       - echo "Zipping deployment package..."
