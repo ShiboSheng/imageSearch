@@ -12,7 +12,7 @@ region = "us-east-1"
 
 def build_search_client(host, port=443):
     service = "es"
-
+#test
     awsauth = AWS4Auth(
         os.environ['AWSAccessKeyId'],
         os.environ['AWSSecretKey'],
