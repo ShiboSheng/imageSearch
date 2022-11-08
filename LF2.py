@@ -4,7 +4,8 @@ import logging
 import requests
 from datetime import datetime
 from opensearchpy import OpenSearch, RequestsHttpConnection
-from aws_requests_auth.aws_auth import AWSRequestsAuth
+from requests_aws4auth import AWS4Auth
+import os
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -33,15 +34,14 @@ def extract_label(input):
 
 
 def build_search_client(host, port=443):
-    credentials = boto3.Session().get_credentials()
     service = "es"
-    awsauth = AWSRequestsAuth(
-        aws_access_key=credentials.access_key,
-        aws_secret_access_key=credentials.secret_key,
-        aws_token=credentials.token,
-        aws_host=opensearch_host,
-        aws_region=region,
-        aws_service=service
+
+    awsauth = AWS4Auth(
+        os.environ['AWSAccessKeyId'],
+        os.environ['AWSSecretKey'],
+        region,
+        service,
+        None
     )
     client = OpenSearch(
         hosts=[{'host': host, 'port': port}],
@@ -59,7 +59,7 @@ def search_label(client, labels):
         search_label += (" OR " + label)
     logger.info('Searching for ' + search_label)
     
-    query = {
+    data = {
         "query": {
             "match": {
                 "labels": {
@@ -69,7 +69,7 @@ def search_label(client, labels):
             }
         }
     }
-    opensearch_rsp = client.search(body=query, index='photoalbum')
+    opensearch_rsp = client.search(body=data, index='photoalbum')
     try:
         photos = opensearch_rsp['hits']['hits']
     except KeyError:

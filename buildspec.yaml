@@ -2,10 +2,10 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.10
+      python: 3.8
     commands:
       - echo "Installing dependencies..."
-      - pip install requests -t lib
+      - pip install opensearchpy -t lib
       - pip install requests_aws4auth -t lib
   build:
     commands:
@@ -16,12 +16,18 @@ phases:
       - mkdir build
       - mv deployment_package.zip build/deployment_package_index_photos.zip
       - cp build/deployment_package_index_photos.zip build/deployment_package_search_photos.zip
-      - mv index-photos.py lambda_function.py
+      - mv LF1.py lambda_function.py
       - zip -g build/deployment_package_index_photos.zip lambda_function.py
-      - mv search-photos.py lambda_function.py
+      - mv LF2.py lambda_function.py
       - zip -g build/deployment_package_search_photos.zip lambda_function.py
-      - mv searchbot-hook.py lambda_function.py
-      - zip build/deployment_package_searchbot_hoot.zip lambda_function.py
+
+      - echo "Deploying lambda Function..."
+      - cd build
+      - aws lambda update-function-code --function-name index-test --zip-file fileb://deployment_package_index_photos.zip
+      - aws lambda update-function-code --function-name search-test --zip-file fileb://deployment_package_search_photos.zip
+      - echo "DONE!!"
+
+
 artifacts:
   files:
     - 'build/*'

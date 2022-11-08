@@ -3,17 +3,24 @@ import urllib.parse
 import boto3
 import requests
 from datetime import datetime
-from opensearchpy import OpenSearch, RequestsHttpConnection
+from opensearchpy import OpenSearch, RequestsHttpConnection, AWSV4SignerAuth
 from requests_aws4auth import AWS4Auth
+import os
 
 opensearch_host = "search-photos-5jcv3q4icmnpfuq7mfjo6v36q4.us-east-1.es.amazonaws.com"
 region = "us-east-1"
 
 def build_search_client(host, port=443):
     service = "es"
-    credentials = boto3.Session().get_credentials()
-    #awsauth = AWS4Auth('AKIAQQ3LP4USU43VTMHR', '29fBf/Fg4ddotmlQPqI99BM+1ueL4rwQOqzcFjzL', region, service, None)
 
+    awsauth = AWS4Auth(
+        os.environ['AWSAccessKeyId'],
+        os.environ['AWSSecretKey'],
+        region,
+        service,
+        None
+    )
+    
     client = OpenSearch(
         hosts=[{'host': host, 'port': port}],
         http_auth=awsauth,
@@ -49,6 +56,7 @@ def get_metadata(client, bucket, key):
     response = client.head_object(Bucket=bucket, Key=key)
     try:
         custom_labels = response["Metadata"]["customlabels"]
+        print(custom_labels)
         labels = custom_labels.split(",")
     except KeyError:
         labels = []
@@ -81,7 +89,7 @@ def lambda_handler(event, context):
     return {
         'statusCode': 200,
         'body': json.dumps('Info uploaded to OpenSearch.')
-    }    
+    }
 
 
     
