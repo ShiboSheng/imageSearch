@@ -23,8 +23,8 @@ phases:
 
       - echo "Deploying lambda Function..."
       - cd build
-      - aws lambda update-function-code --function-name index-test --zip-file fileb://deployment_package_index_photos.zip
-      - aws lambda update-function-code --function-name search-test --zip-file fileb://deployment_package_search_photos.zip
+      - aws lambda update-function-code --function-name index-photos --zip-file fileb://deployment_package_index_photos.zip
+      - aws lambda update-function-code --function-name search-photo --zip-file fileb://deployment_package_search_photos.zip
       - echo "DONE!!"
 
 
