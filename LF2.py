@@ -33,7 +33,7 @@ def extract_label(input):
         logger.info("Extracted labels: " + str(labels))
         return labels
     except KeyError:
-        return []
+        return [input]
 
 
 def build_search_client(host, port=443):
@@ -59,7 +59,7 @@ def build_search_client(host, port=443):
 def search_label(client, labels):
     if len(labels) == 0:
         return {'results': []}
-        
+
     search_label = labels[0]
     for label in labels[1:]:
         search_label += (" OR " + label)
