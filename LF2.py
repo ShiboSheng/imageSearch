@@ -32,7 +32,7 @@ def extract_label(input):
                 labels.append(slots[slot]['value']['interpretedValue'])
         logger.info("Extracted labels: " + str(labels))
         return labels
-    else:
+    except KeyError:
         return []
 
 
