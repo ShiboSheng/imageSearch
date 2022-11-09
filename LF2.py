@@ -15,22 +15,25 @@ region = 'us-east-1'
 
 def extract_label(input):
     lexv2 = boto3.client('lexv2-runtime')
-    response = lexv2.recognize_text(
-        botId='S9FEFDFCCC',
-        botAliasId='TSTALIASID',
-        localeId='en_US',
-        sessionId='test_session',
-        text=input
-    )
-    for message in response['messages']:
-        logger.info(message['content'])
-    labels = []
-    slots = response['sessionState']['intent']['slots']
-    for slot in slots:
-        if slots[slot]:
-            labels.append(slots[slot]['value']['interpretedValue'])
-    logger.info("Extracted labels: " + str(labels))
-    return labels
+    try: 
+        response = lexv2.recognize_text(
+            botId='S9FEFDFCCC',
+            botAliasId='TSTALIASID',
+            localeId='en_US',
+            sessionId='test_session',
+            text=input
+        )
+        for message in response['messages']:
+            logger.info(message['content'])
+        labels = []
+        slots = response['sessionState']['intent']['slots']
+        for slot in slots:
+            if slots[slot]:
+                labels.append(slots[slot]['value']['interpretedValue'])
+        logger.info("Extracted labels: " + str(labels))
+        return labels
+    else:
+        return []
 
 
 def build_search_client(host, port=443):
