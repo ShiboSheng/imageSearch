@@ -35,7 +35,7 @@ def extract_label(input):
     except KeyError:
         return [input]
 
-
+#test
 def build_search_client(host, port=443):
     service = "es"
 
